@@ -1,0 +1,18 @@
+name: Bullish_OB_Sweep_BPR
+version: 1.0
+timeframes: [2m,5m,15m]
+logic:
+  all:
+    - bos.direction: up
+    - ob.side: bullish
+    - sweep.type: sell_side
+    - bpr.exists: true
+filters:
+  min_volume_usd_24h: 30000000
+  session: NY
+scoring:
+  weights: {bos:0.3, ob:0.25, sweep:0.2, bpr:0.15, session:0.1}
+  threshold_alert: 0.70
+notify:
+  include_chart: true
+  template: default_bullish

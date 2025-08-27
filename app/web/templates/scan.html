@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Scan</title>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <link rel="stylesheet" href="/static/basic.css">
+</head>
+<body>
+  <header>
+    <h2>Manual Scan</h2>
+    <a href="/" hx-get="/" hx-target="body" hx-swap="outerHTML">Home</a>
+  </header>
+
+  <div class="card">
+    <form hx-post="/scan/run" hx-target="#scan_result" hx-swap="innerHTML">
+      <input name="symbol" placeholder="BTC/USDT" required>
+      <input name="timeframe" placeholder="5m" required>
+      <button class="btn" type="submit">Run Scan</button>
+    </form>
+  </div>
+
+  <div id="scan_result"></div>
+</body>
+</html>

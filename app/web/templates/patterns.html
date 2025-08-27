@@ -1,0 +1,26 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Patterns</title>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <link rel="stylesheet" href="/static/basic.css">
+</head>
+<body>
+  <header>
+    <h2>Patterns</h2>
+    <a href="/" hx-get="/" hx-target="body" hx-swap="outerHTML">Home</a>
+  </header>
+
+  <div class="card">
+    <form hx-post="/patterns/upload" hx-target="#patterns_table" hx-swap="outerHTML">
+      <label>Pattern YAML (paste):</label><br>
+      <textarea name="yaml" rows="12" style="width:100%;"></textarea><br>
+      <button class="btn" type="submit">Save Pattern</button>
+    </form>
+  </div>
+
+  <div id="patterns_table" hx-get="/patterns/table" hx-trigger="load"></div>
+</body>
+</html>

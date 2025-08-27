@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Watchlist</title>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <link rel="stylesheet" href="/static/basic.css">
+</head>
+<body>
+  <header>
+    <h2>Watchlist</h2>
+    <a href="/" hx-get="/" hx-target="body" hx-swap="outerHTML">Home</a>
+  </header>
+
+  <div class="card">
+    <form hx-post="/watchlist/add" hx-target="#watchlist_table" hx-swap="outerHTML">
+      <input name="symbol" placeholder="BTC/USDT" required>
+      <input name="timeframe" placeholder="5m" required>
+      <input name="threshold" placeholder="0.7" type="number" step="0.01">
+      <input name="min_vol_usd" placeholder="30000000" type="number" step="1">
+      <button class="btn" type="submit">Add</button>
+    </form>
+  </div>
+
+  <div id="watchlist_table" hx-get="/watchlist/table" hx-trigger="load"></div>
+</body>
+</html>

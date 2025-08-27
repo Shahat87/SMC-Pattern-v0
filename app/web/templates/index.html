@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SMC Scanner</title>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  <style>
+    body { font-family: system-ui, Arial; margin: 24px; }
+    header { display:flex; gap:16px; align-items:center; margin-bottom: 16px; }
+    a { text-decoration:none; color:#0a66c2; }
+    .nav a { margin-right: 12px; }
+    table { border-collapse: collapse; width: 100%; }
+    th, td { border:1px solid #ddd; padding:8px; }
+    th { background:#f4f4f4; text-align:left; }
+    .btn { background:#0a66c2; color:#fff; padding:6px 10px; border-radius:6px; }
+    .card { border:1px solid #e5e5e5; padding:16px; border-radius:8px; margin: 12px 0; }
+    .muted { color:#666; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <header>
+    <h2>SMC Pattern Scanner</h2>
+    <div class="nav">
+      <a href="/" hx-get="/" hx-target="body" hx-swap="outerHTML">Home</a>
+      <a href="/patterns" hx-get="/patterns" hx-target="body" hx-swap="outerHTML">Patterns</a>
+      <a href="/watchlist" hx-get="/watchlist" hx-target="body" hx-swap="outerHTML">Watchlist</a>
+      <a href="/alerts" hx-get="/alerts" hx-target="body" hx-swap="outerHTML">Alerts</a>
+      <a href="/scan" hx-get="/scan" hx-target="body" hx-swap="outerHTML">Scan</a>
+    </div>
+  </header>
+
+  <div class="card">
+    <p>Welcome 👋 — use the navigation above. This is a runnable skeleton you can expand.</p>
+    <ul>
+      <li>Patterns are YAML files in <code>patterns/</code>.</li>
+      <li>Manage watchlist & run manual scans from the UI.</li>
+      <li>Alerts will be recorded with image snapshots (placeholder for now).</li>
+    </ul>
+    <p class="muted">API: <a href="/docs" target="_blank">/docs</a></p>
+  </div>
+</body>
+</html>
