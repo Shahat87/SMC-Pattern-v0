@@ -69,12 +69,30 @@ async def patterns_upload(yaml: str = Form(...)):
 @app.get("/watchlist/table", response_class=HTMLResponse)
 def watchlist_table():
     conn = get_conn()
-    rows = conn.execute("SELECT id, symbol, timeframe, threshold, min_vol_usd, active FROM watchlist ORDER BY id DESC").fetchall()
-    html = ['<table><tr><th>ID</th><th>Symbol</th><th>TF</th><th>Threshold</th><th>MinVolUSD</th><th>Active</th></tr>']
+    rows = conn.execute(
+        "SELECT id, symbol, timeframe, threshold, min_vol_usd, active FROM watchlist ORDER BY id DESC"
+    ).fetchall()
+    html = [
+        '<table><tr><th>ID</th><th>Symbol</th><th>TF</th><th>Threshold</th><th>MinVolUSD</th><th>Active</th><th>Actions</th></tr>'
+    ]
     for r in rows:
-        html.append(f"<tr><td>{r['id']}</td><td>{r['symbol']}</td><td>{r['timeframe']}</td><td>{r['threshold']}</td><td>{r['min_vol_usd']}</td><td>{'✅' if r['active'] else '❌'}</td></tr>")
+        rid = r["id"]
+        active_icon = "✅" if r["active"] else "❌"
+        toggle_label = "Deactivate" if r["active"] else "Activate"
+        html.append(
+            f"<tr><td>{rid}</td><td>{r['symbol']}</td><td>{r['timeframe']}</td>"
+            f"<td><input form='f{rid}' name='threshold' value='{r['threshold']}' type='number' step='0.01' style='width:70px'></td>"
+            f"<td><input form='f{rid}' name='min_vol_usd' value='{r['min_vol_usd']}' type='number' step='1' style='width:100px'></td>"
+            f"<td>{active_icon}</td>"
+            f"<td>"
+            f"<form id='f{rid}' hx-post='/watchlist/update/{rid}' hx-target='#watchlist_table' hx-swap='outerHTML' style='display:inline'><button class='btn' type='submit'>Save</button></form> "
+            f"<form hx-post='/scan/run' hx-target='#scan_result' hx-swap='innerHTML' style='display:inline'><input type='hidden' name='symbol' value='{r['symbol']}'><input type='hidden' name='timeframe' value='{r['timeframe']}'><button class='btn' type='submit'>Scan</button></form> "
+            f"<form hx-post='/watchlist/toggle/{rid}' hx-target='#watchlist_table' hx-swap='outerHTML' style='display:inline'><button class='btn' type='submit'>{toggle_label}</button></form> "
+            f"<form hx-post='/watchlist/delete/{rid}' hx-target='#watchlist_table' hx-swap='outerHTML' style='display:inline'><button class='btn' type='submit'>Delete</button></form>"
+            f"</td></tr>"
+        )
     html.append("</table>")
-    return HTMLResponse(''.join(html))
+    return HTMLResponse("".join(html))
 
 @app.post("/watchlist/add", response_class=HTMLResponse)
 async def watchlist_add(symbol: str = Form(...), timeframe: str = Form(...), threshold: float = Form(0.7), min_vol_usd: float = Form(3e7)):
@@ -82,6 +100,30 @@ async def watchlist_add(symbol: str = Form(...), timeframe: str = Form(...), thr
     conn.execute(
         "INSERT INTO watchlist (symbol, timeframe, threshold, min_vol_usd, active) VALUES (?,?,?,?,1)",
         (symbol, timeframe, threshold, min_vol_usd),
+    )
+    conn.commit()
+    return watchlist_table()
+
+@app.post("/watchlist/toggle/{id}", response_class=HTMLResponse)
+def watchlist_toggle(id: int):
+    conn = get_conn()
+    conn.execute("UPDATE watchlist SET active = CASE active WHEN 1 THEN 0 ELSE 1 END WHERE id=?", (id,))
+    conn.commit()
+    return watchlist_table()
+
+@app.post("/watchlist/delete/{id}", response_class=HTMLResponse)
+def watchlist_delete(id: int):
+    conn = get_conn()
+    conn.execute("DELETE FROM watchlist WHERE id=?", (id,))
+    conn.commit()
+    return watchlist_table()
+
+@app.post("/watchlist/update/{id}", response_class=HTMLResponse)
+async def watchlist_update(id: int, threshold: float = Form(...), min_vol_usd: float = Form(...)):
+    conn = get_conn()
+    conn.execute(
+        "UPDATE watchlist SET threshold=?, min_vol_usd=? WHERE id=?",
+        (threshold, min_vol_usd, id),
     )
     conn.commit()
     return watchlist_table()
