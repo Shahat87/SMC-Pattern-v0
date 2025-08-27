@@ -51,3 +51,10 @@ requirements.txt
 - Implement real primitives in `features.py` and full YAML evaluation in `patterns_engine.py`.
 - Add APScheduler job for periodic scans (hook in `main.py` is ready).
 - Extend the UI (Backtest page, Pattern Builder editor, etc.).
+
+## New additions
+- Pattern media storage: upload template images and link to patterns. Files saved under `storage/patterns/` and served at `/storage/...`.
+- Patterns page: second form to upload image by `pattern_id`, and enhanced table showing media count with inline preview.
+- Scan v2: new endpoint `/scan/run2` used by the Scan page. Renders a chart (mplfinance if available, otherwise fallback PNG) and compares against uploaded template images using a simple normalized cross-correlation implemented with Pillow+NumPy.
+- Thresholding: uses `max(watchlist.threshold, pattern.scoring.threshold_alert)` for decision.
+- Telegram: `send_telegram_alert` tries to send if `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` are set; otherwise no-op.

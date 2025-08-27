@@ -13,3 +13,4 @@ numpy>=2.0
 # mplfinance>=0.12
 # python-telegram-bot>=21.0
 # apscheduler>=3.10
+Pillow>=10.0
