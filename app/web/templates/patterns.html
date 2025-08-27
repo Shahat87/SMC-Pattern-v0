@@ -21,6 +21,15 @@
     </form>
   </div>
 
-  <div id="patterns_table" hx-get="/patterns/table" hx-trigger="load"></div>
+  <div class="card">
+    <form hx-post="/patterns/media/upload" hx-encoding="multipart/form-data" hx-target="#patterns_table" hx-swap="outerHTML">
+      <label>Attach Template Image to Pattern:</label><br>
+      <input name="pattern_id" type="number" placeholder="Pattern ID" required style="width:110px"> &nbsp;
+      <input name="file" type="file" accept="image/*" required>
+      <button class="btn" type="submit">Upload Image</button>
+    </form>
+  </div>
+
+  <div id="patterns_table" hx-get="/patterns/table2" hx-trigger="load"></div>
 </body>
 </html>

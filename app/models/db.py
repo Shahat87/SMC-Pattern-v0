@@ -27,6 +27,17 @@ def init_db():
             is_active INTEGER DEFAULT 1,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
+        CREATE TABLE IF NOT EXISTS pattern_media (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pattern_id INTEGER,
+            kind TEXT DEFAULT 'template',
+            filename TEXT,
+            mime TEXT,
+            width INTEGER,
+            height INTEGER,
+            notes TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
         CREATE TABLE IF NOT EXISTS watchlist (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             symbol TEXT,
